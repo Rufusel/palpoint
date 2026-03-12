@@ -107,6 +107,31 @@ let shop = JSON.parse(localStorage.getItem("shop") || "[]");
 let chat = JSON.parse(localStorage.getItem("chat") || "[]");
 let current = JSON.parse(localStorage.getItem("current") || "null");
 
+// cache commonly-used DOM elements by id to avoid relying on implicit globals
+const uIn = document.getElementById("uIn");
+const pIn = document.getElementById("pIn");
+const pinIn = document.getElementById("pinIn");
+const auth = document.getElementById("auth");
+const app = document.getElementById("app");
+const welcome = document.getElementById("welcome");
+const adminPanel = document.getElementById("adminPanel");
+const usersData = document.getElementById("usersData");
+const myCard = document.getElementById("myCard");
+const cardNumber = document.getElementById("cardNumber");
+const cardName = document.getElementById("cardName");
+const balanceDisplay = document.getElementById("balanceDisplay");
+const invContainer = document.getElementById("invContainer");
+const shopContainer = document.getElementById("shopContainer");
+const chatBox = document.getElementById("chatBox");
+const chatMsg = document.getElementById("chatMsg");
+const chatBtn = document.getElementById("chatBtn");
+const toUser = document.getElementById("toUser");
+const toAmount = document.getElementById("toAmount");
+const itName = document.getElementById("itName");
+const itPrice = document.getElementById("itPrice");
+const itFile = document.getElementById("itFile");
+const notif = document.getElementById("notif");
+
 const CREATOR = "Rafazb030";
 const ADMINS = ["Vlad", "Raulcapybara", "ProTvDarius"];
 let chatCooldown = false;
