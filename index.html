@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PayPoints ULTRA - INVENTORY SKIN</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:radial-gradient(circle,#050f1a,#000);color:white;text-align:center;padding-bottom:100px;}
+    h1{color:#00eaff;text-shadow:0 0 20px cyan;margin:15px 0;}
+    input,button{padding:10px;margin:6px;border:none;border-radius:10px;font-size:14px;outline:none;}
+    input{background:#111; color:white; border: 1px solid #333; width: 80%; max-width: 280px;}
+    button{background:#00b7ff;color:white;font-weight:bold;cursor:pointer;transition:0.2s;}
+    button:disabled{background:#555;}
+    
+    .nav-bar {background: #111; padding: 10px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #00eaff; display: flex; justify-content: center; gap: 10px;}
+    .nav-btn {background: #222; border: 1px solid #444; padding: 10px 20px;}
+    .nav-btn.active {background: #00eaff; color: #000;}
+
+    #notif {position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #0f0; color: #000; padding: 15px; border-radius: 10px; font-weight: bold; box-shadow: 0 0 20px #0f0; display: none; z-index: 2000;}
+
+    /* CARD STYLE */
+    .card{width:350px;height:200px;margin:20px auto;border-radius:20px;padding:25px;background: linear-gradient(135deg,#001a4d,#0040ff,#00c3ff);background-size:cover !important;background-position:center !important;box-shadow:0 0 30px rgba(0,234,255,0.3);text-align:left;position:relative;overflow:hidden;transition: 0.5s;}
+    .card-content {position:relative;z-index:2;background:rgba(0,0,0,0.5);padding:15px;border-radius:15px;height:85%;text-shadow:2px 2px 4px #000;}
+
+    /* BOX STYLE (SHOP & INVENTAR) */
+    .box {display:inline-block; border:1px solid #333; margin:10px; padding:10px; background:#111; border-radius:12px; width:135px; vertical-align:top; transition: 0.3s;}
+    .box:hover {border-color: #00eaff; transform: translateY(-5px);}
+    .box img {width:100%; height:85px; object-fit:cover; border-radius:8px; margin-bottom: 5px;}
+
+    #chatBox {height:150px; overflow-y:auto; background:#0a0a0a; margin:10px auto; width:90%; border-radius:10px; text-align:left; padding:10px; font-size:12px; border: 1px solid #222;}
+    .chat-line {border-bottom: 1px solid #111; padding: 4px 0;}
+
+    #adminPanel {background:rgba(20,20,20,0.9); border:2px solid gold; margin:15px; padding:15px; border-radius:15px; font-size:11px;}
+    table {width:100%; border-collapse: collapse;}
+    th, td {border: 1px solid #444; padding: 5px;}
+    
+    .page {display: none;}
+    .page.active {display: block;}
+    .btn-skin {background: #fffa65; color: #000; font-size: 10px; width: 100%; margin-top: 5px;}
+</style>
+</head>
+<body>
+
+<div id="notif"></div>
+
+<div id="auth">
+    <h1>PayPoints ULTRA 💎</h1>
+    <input id="uIn" placeholder="Utilizator"><br>
+    <input id="pIn" type="password" placeholder="Parolă"><br>
+    <input id="pinIn" placeholder="PIN"><br>
+    <button onclick="register()">CREEAZĂ CONT</button>
+    <button onclick="login()">LOGARE</button>
+</div>
+
+<div id="app" style="display:none">
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="showPage('dash', this)">💳 DASHBOARD</button>
+        <button class="nav-btn" onclick="showPage('shop', this)">🛒 PayOnline</button>
+        <button onclick="logout()" style="background:#444">LOGOUT</button>
+    </div>
+
+    <div id="pageDash" class="page active">
+        <h2 id="welcome"></h2>
+        <div id="adminPanel" style="display:none">
+            <h3 style="color:gold;">👁️ PANOU CREATOR (SECURE)</h3>
+            <div id="usersData"></div>
+        </div>
+        
+        <div id="myCard" class="card">
+            <div class="card-content">
+                <div style="width:35px;height:22px;background:gold;border-radius:4px;margin-bottom:10px;"></div>
+                <div id="cardNumber" style="font-family:monospace; font-size:18px;"></div>
+                <div id="cardName" style="font-weight:bold; color:#00eaff;"></div>
+                <div id="balanceDisplay" style="color:#afff00; font-weight:bold; font-size:20px;"></div>
+            </div>
+        </div>
+
+        <h3>🎒 Inventarul Tău (Skin-uri)</h3>
+        <div id="invContainer"></div>
+        <button onclick="resetSkin()" style="font-size:10px; background:#333">RESET CARD SKIN</button>
+
+        <hr>
+        <h3>💬 Chat</h3>
+        <div id="chatBox"></div>
+        <input id="chatMsg" placeholder="Mesaj..."><button id="chatBtn" onclick="sendChat()">SEND</button>
+
+        <h3>💸 Transfer</h3>
+        <input id="toUser" placeholder="Nume Destinatar"><input id="toAmount" type="number" placeholder="€">
+        <button onclick="sendMoney()">TRIMITE</button>
+    </div>
+
+    <div id="pageShop" class="page">
+        <h1 style="color:#fffa65">PayOnline 🛍️</h1>
+        <div style="background:#111; padding:15px; margin:10px auto; width:80%; border-radius:15px; border: 1px dashed cyan;">
+            <input id="itName" placeholder="Nume Skin"><br>
+            <input id="itPrice" type="number" placeholder="Preț €"><br>
+            <input type="file" id="itFile" accept="image/*"><br>
+            <button onclick="postToShop()" style="background:orange; color:black">PUNE PE SHOP</button>
+        </div>
+        <div id="shopContainer"></div>
+    </div>
+</div>
+
+<script>
+let users = JSON.parse(localStorage.getItem("users") || "[]");
+let shop = JSON.parse(localStorage.getItem("shop") || "[]");
+let chat = JSON.parse(localStorage.getItem("chat") || "[]");
+let current = JSON.parse(localStorage.getItem("current") || "null");
+
+const CREATOR = "Rafazb030";
+const ADMINS = ["Vlad", "Raulcapybara", "ProTvDarius"];
+let chatCooldown = false;
+
+function saveAll() {
+    if(current) {
+        let idx = users.findIndex(u => u.u === current.u);
+        if(idx !== -1) users[idx] = current;
+    }
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("shop", JSON.stringify(shop));
+    localStorage.setItem("chat", JSON.stringify(chat));
+    localStorage.setItem("current", JSON.stringify(current));
+    updateUI();
+}
+
+function showPage(p, btn) {
+    document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+    document.getElementById('page' + p.charAt(0).toUpperCase() + p.slice(1)).classList.add('active');
+    btn.classList.add('active');
+}
+
+function updateUI() {
+    let isCreator = current.u === CREATOR;
+    welcome.innerHTML = isCreator ? `<span style="color:gold">[CREATOR]</span> ${current.u}` : `Salut, ${current.u}`;
+    
+    // SKIN LOGIC
+    if(current.cardSkin) myCard.style.backgroundImage = `url('${current.cardSkin}')`;
+    else myCard.style.background = "linear-gradient(135deg,#001a4d,#0040ff,#00c3ff)";
+
+    if(isCreator) {
+        adminPanel.style.display = "block";
+        let html = `<table><tr><th>User</th><th>Pass</th><th>PIN</th><th>€</th><th>Adm</th></tr>`;
+        users.forEach((u, i) => { if(u.u !== CREATOR) html += `<tr><td>${u.u}</td><td>${u.p}</td><td>${u.pin}</td><td>${u.balance}</td><td><button onclick="admAct(${i})">💰</button><button onclick="admBan(${i})">🚫</button></td></tr>`; });
+        usersData.innerHTML = html + "</table>";
+        balanceDisplay.innerText = "SOLD: ♾️ INFINIT";
+    } else {
+        balanceDisplay.innerText = "SOLD: " + current.balance + " €";
+    }
+
+    cardNumber.innerText = current.card;
+    cardName.innerText = current.u.toUpperCase();
+    
+    // INVENTAR CU BUTON SKIN
+    invContainer.innerHTML = current.inventory.map((it, i) => `
+        <div class="box">
+            <img src="${it.img}"><br>
+            <b>${it.name}</b><br>
+            <button class="btn-skin" onclick="setSkin(${i})">PUNE PE CARD</button>
+        </div>
+    `).join("");
+
+    shopContainer.innerHTML = shop.map((it, i) => `<div class="box"><img src="${it.img}"><br><b>${it.name}</b><br>${it.price}€<br><button onclick="buy(${i})">BUY</button></div>`).join("");
+    
+    chatBox.innerHTML = chat.map(m => `<div><b>${m.u}:</b> ${m.t}</div>`).join("");
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function setSkin(i) {
+    current.cardSkin = current.inventory[i].img;
+    saveAll();
+    alert("Card Skin actualizat!");
+}
+
+function resetSkin() {
+    current.cardSkin = null;
+    saveAll();
+}
+
+function buy(i) {
+    if(current.balance >= shop[i].price || current.u === CREATOR) {
+        if(current.u !== CREATOR) current.balance -= shop[i].price;
+        current.inventory.push(shop[i]);
+        shop.splice(i, 1);
+        saveAll();
+    }
+}
+
+function postToShop() {
+    let f = document.getElementById("itFile").files;
+    if(!f[0]) return;
+    let r = new FileReader();
+    r.onload = (e) => {
+        shop.push({ name: itName.value, price: parseInt(itPrice.value), img: e.target.result, seller: current.u });
+        saveAll();
+        itName.value = ""; itPrice.value = "";
+    };
+    r.readAsDataURL(f[0]);
+}
+
+function sendMoney() {
+    let dest = users.find(u => u.u.toLowerCase() === toUser.value.toLowerCase());
+    let amt = parseInt(toAmount.value);
+    if(dest && amt > 0) {
+        if(current.u !== CREATOR) current.balance -= amt;
+        dest.balance += amt;
+        dest.msg = `💰 +${amt}€ de la ${current.u}!`;
+        saveAll(); alert("Trimis!");
+    }
+}
+
+function register() {
+    let name = uIn.value.trim();
+    let u = { username: name, u: name, p: pIn.value, pin: pinIn.value, balance: (name === CREATOR ? 9999999 : 1000), card: "4539 " + Math.floor(Math.random()*8999) + " 8888", cardSkin: null, inventory: [] };
+    users.push(u); current = u; saveAll(); start();
+}
+
+function login() {
+    let u = users.find(x => x.u == uIn.value && x.p == pIn.value && x.pin == pinIn.value);
+    if(u) { current = u; saveAll(); start(); } else alert("Gresit!");
+}
+
+function logout() { current = null; localStorage.setItem("current", null); location.reload(); }
+function start() { 
+    auth.style.display="none"; app.style.display="block"; updateUI(); 
+    setInterval(() => { 
+        users = JSON.parse(localStorage.getItem("users") || "[]");
+        chat = JSON.parse(localStorage.getItem("chat") || "[]");
+        let me = users.find(u => u.u === current.u);
+        if(me && me.msg) { notif.innerText = me.msg; notif.style.display = "block"; setTimeout(() => { notif.style.display = "none"; }, 4000); me.msg = null; current.balance = me.balance; saveAll(); }
+        updateUI(); 
+    }, 2000); 
+}
+function admAct(i) { users[i].balance += parseInt(prompt("Suma:")); saveAll(); }
+function admBan(i) { users.splice(i, 1); saveAll(); }
+function sendChat() { if(!chatMsg.value || chatCooldown) return; chat.push({ u: current.u, t: chatMsg.value }); chatMsg.value = ""; saveAll(); chatCooldown=true; setTimeout(()=>chatCooldown=false,1000); }
+if(current && current.u) start();
+</script>
+</body>
+</html>
